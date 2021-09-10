@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace FAQ
             context.Database.MigrateAsync();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseNotyf();
             app.UseRouting();
 
             app.UseAuthentication();

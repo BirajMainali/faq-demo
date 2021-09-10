@@ -1,4 +1,5 @@
-﻿using FAQ.Data;
+﻿using AspNetCoreHero.ToastNotification;
+using FAQ.Data;
 using FAQ.Infrastructure.Helper;
 using FAQ.Infrastructure.Helper.Interface;
 using FAQ.Infrastructure.Provider;
@@ -17,6 +18,12 @@ namespace FAQ
     {
         public static IServiceCollection UseConfiguration(this IServiceCollection services)
         {
+            services.AddNotyf(config =>
+            {
+                config.DurationInSeconds = 10;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.BottomRight;
+            });
             UseMisc(services);
             UseRepos(services);
             UseServices(services);

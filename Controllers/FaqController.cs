@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using FAQ.Dto;
 using FAQ.Infrastructure.Helper.Interface;
 using FAQ.Infrastructure.Provider.Interface;
@@ -19,12 +20,14 @@ namespace FAQ.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly IUserProvider _userProvider;
         private readonly IFaqService _faqService;
+        private readonly INotyfService _notyf;
 
         public FaqController(IFaqRepository faqRepository,
             IImageHelper imageHelper,
             IWebHostEnvironment env,
             IUserProvider userProvider,
-            IFaqService faqService
+            IFaqService faqService,
+            INotyfService notyf
         )
         {
             _faqRepository = faqRepository;
@@ -32,6 +35,7 @@ namespace FAQ.Controllers
             _env = env;
             _userProvider = userProvider;
             _faqService = faqService;
+            _notyf = notyf;
         }
 
         [HttpGet]
@@ -58,12 +62,13 @@ namespace FAQ.Controllers
                 var user = await _userProvider.GetCurrentUser();
                 var dto = new FaqDto(user, faqViewModel.Title, faqViewModel.Description, imagePath);
                 await _faqService.Create(dto);
+                _notyf.Success("Post Created");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _notyf.Error(e.Message);
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -84,8 +89,8 @@ namespace FAQ.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _notyf.Error(e.Message);
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -102,12 +107,13 @@ namespace FAQ.Controllers
                 var imagePath = await _imageHelper.UploadImageAndResize(updateViewModel.File, _env.WebRootPath);
                 var updateDto = new FaqDto(user, updateViewModel.Title, updateViewModel.Description, imagePath);
                 await _faqService.Update(faq, updateDto);
+                _notyf.Warning("Post Updated");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _notyf.Error(e.Message);
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -119,12 +125,13 @@ namespace FAQ.Controllers
             {
                 var faq = await _faqRepository.FindOrThrowAsync(id);
                 await _faqService.Remove(faq);
+                _notyf.Success("Post Removed");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _notyf.Error(e.Message);
+                return RedirectToAction(nameof(Index));
             }
         }
     }
