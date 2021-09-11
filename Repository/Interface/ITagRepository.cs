@@ -1,5 +1,5 @@
 ﻿using FAQ.entities;
-using FAQ.Infrastructure.Interface.Base.BaseRepository.Interface;
+using FAQ.Infrastructure.Base.Interface.Base.BaseRepository.Interface;
 
 namespace FAQ.Repository.Interface
 {

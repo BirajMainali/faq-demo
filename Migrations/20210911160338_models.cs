@@ -4,12 +4,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FAQ.Migrations
 {
-    public partial class user : Migration
+    public partial class models : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "user");
+                name: "User");
+
+            migrationBuilder.EnsureSchema(
+                name: "faq");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
@@ -48,6 +51,24 @@ namespace FAQ.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tags",
+                schema: "faq",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Slug = table.Column<string>(type: "text", nullable: true),
+                    RecDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ChangeAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RecAuditLog = table.Column<string>(type: "text", nullable: true),
+                    RecStatus = table.Column<char>(type: "character(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,7 +179,7 @@ namespace FAQ.Migrations
 
             migrationBuilder.CreateTable(
                 name: "auth_user",
-                schema: "user",
+                schema: "User",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false)
@@ -172,6 +193,77 @@ namespace FAQ.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "faq_items",
+                schema: "faq",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    Question = table.Column<string>(type: "text", nullable: true),
+                    Answer = table.Column<string>(type: "text", nullable: true),
+                    RecDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ChangeAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RecAuditLog = table.Column<string>(type: "text", nullable: true),
+                    RecStatus = table.Column<char>(type: "character(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_faq_items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_faq_items_auth_user_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "User",
+                        principalTable: "auth_user",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "faq_tag",
+                schema: "faq",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TagId = table.Column<long>(type: "bigint", nullable: true),
+                    FaqId = table.Column<long>(type: "bigint", nullable: true),
+                    RecDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ChangeAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RecAuditLog = table.Column<string>(type: "text", nullable: true),
+                    RecStatus = table.Column<char>(type: "character(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_faq_tag", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_faq_tag_faq_items_FaqId",
+                        column: x => x.FaqId,
+                        principalSchema: "faq",
+                        principalTable: "faq_items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_faq_tag_tags_TagId",
+                        column: x => x.TagId,
+                        principalSchema: "faq",
+                        principalTable: "tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                schema: "faq",
+                table: "tags",
+                columns: new[] { "Id", "ChangeAt", "RecAuditLog", "RecDate", "RecStatus", "Slug" },
+                values: new object[,]
+                {
+                    { 1L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 178, DateTimeKind.Local).AddTicks(9437), 'A', "Stakeholder" },
+                    { 2L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5602), 'A', "Inventory" },
+                    { 3L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5614), 'A', "Lekhastra Web" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -210,6 +302,24 @@ namespace FAQ.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_faq_items_UserId",
+                schema: "faq",
+                table: "faq_items",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_faq_tag_FaqId",
+                schema: "faq",
+                table: "faq_tag",
+                column: "FaqId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_faq_tag_TagId",
+                schema: "faq",
+                table: "faq_tag",
+                column: "TagId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -230,11 +340,23 @@ namespace FAQ.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "auth_user",
-                schema: "user");
+                name: "faq_tag",
+                schema: "faq");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "faq_items",
+                schema: "faq");
+
+            migrationBuilder.DropTable(
+                name: "tags",
+                schema: "faq");
+
+            migrationBuilder.DropTable(
+                name: "auth_user",
+                schema: "User");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

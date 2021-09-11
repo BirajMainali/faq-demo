@@ -3,7 +3,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FAQ.Infrastructure;
-using FAQ.Infrastructure.Interface;
+using FAQ.Infrastructure.Base;
+using FAQ.Infrastructure.Base.Interface;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

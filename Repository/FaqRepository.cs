@@ -1,5 +1,6 @@
 ﻿using FAQ.entities;
 using FAQ.Infrastructure;
+using FAQ.Infrastructure.Base;
 using FAQ.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,26 @@
 ﻿@model System.Collections.Generic.List<FAQ.entities.Faq>
 
 @{
-    ViewBag.Title = "question";
+    ViewBag.Title = "FAQ";
     Layout = "_Layout";
 }
 
-<h2>question</h2>
+@foreach (var faq in Model)
+{
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        @faq.Question ?
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    @faq.Question
+                </div>
+            </div>
+        </div>
+    </div>
+}

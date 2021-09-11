@@ -51,7 +51,7 @@ namespace FAQ.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FAQ", "FAQ");
+                    b.ToTable("faq_items", "faq");
                 });
 
             modelBuilder.Entity("FAQ.entities.FaqTag", b =>
@@ -85,7 +85,7 @@ namespace FAQ.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("faq_tag", "FAQ");
+                    b.ToTable("faq_tag", "faq");
                 });
 
             modelBuilder.Entity("FAQ.entities.Tag", b =>
@@ -112,29 +112,29 @@ namespace FAQ.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tag", "FAQ");
+                    b.ToTable("tags", "faq");
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
-                            RecDate = new DateTime(2021, 9, 11, 19, 42, 43, 295, DateTimeKind.Local).AddTicks(4693),
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 178, DateTimeKind.Local).AddTicks(9437),
                             RecStatus = 'A',
                             Slug = "Stakeholder"
                         },
                         new
                         {
                             Id = 2L,
-                            RecDate = new DateTime(2021, 9, 11, 19, 42, 43, 296, DateTimeKind.Local).AddTicks(1055),
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5602),
                             RecStatus = 'A',
                             Slug = "Inventory"
                         },
                         new
                         {
                             Id = 3L,
-                            RecDate = new DateTime(2021, 9, 11, 19, 42, 43, 296, DateTimeKind.Local).AddTicks(1073),
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5614),
                             RecStatus = 'A',
-                            Slug = "Web"
+                            Slug = "Lekhastra Web"
                         });
                 });
 
@@ -340,7 +340,7 @@ namespace FAQ.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.ToTable("auth_user", "user");
+                    b.ToTable("auth_user", "User");
                 });
 
             modelBuilder.Entity("FAQ.entities.Faq", b =>
@@ -355,7 +355,7 @@ namespace FAQ.Migrations
             modelBuilder.Entity("FAQ.entities.FaqTag", b =>
                 {
                     b.HasOne("FAQ.entities.Faq", "Faq")
-                        .WithMany()
+                        .WithMany("FaqTags")
                         .HasForeignKey("FaqId");
 
                     b.HasOne("FAQ.entities.Tag", "Tag")
@@ -425,6 +425,11 @@ namespace FAQ.Migrations
                         .HasForeignKey("FAQ.entities.User", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FAQ.entities.Faq", b =>
+                {
+                    b.Navigation("FaqTags");
                 });
 #pragma warning restore 612, 618
         }

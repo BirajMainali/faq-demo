@@ -1,5 +1,4 @@
 ﻿using AspNetCoreHero.ToastNotification;
-using FAQ.Application;
 using FAQ.Data;
 using FAQ.Infrastructure.Provider;
 using FAQ.Infrastructure.Provider.Interface;
@@ -36,13 +35,12 @@ namespace FAQ
                 .AddScoped<ITagRepository, TagRepository>();
 
         private static void UseServices(IServiceCollection services)
-            => services.AddScoped<IFaqService, FaqService>()
+            => services.AddScoped<IFaqTagService, FaqTagService>()
                 .AddScoped<IFaqTagService, FaqTagService>();
 
         private static void UseMisc(IServiceCollection services)
             => services.AddScoped<IUserProvider, UserProvider>()
                 .AddScoped<DbContext, ApplicationDbContext>()
-                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-                .AddScoped<IFAqManager, FaqManager>();
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 }

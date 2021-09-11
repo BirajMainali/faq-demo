@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using FAQ.Application;
 using FAQ.Dto;
 using FAQ.Infrastructure.Provider.Interface;
 using FAQ.Repository.Interface;
@@ -9,6 +9,7 @@ using FAQ.Services.Interface;
 using FAQ.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FAQ.Controllers
 {
@@ -16,25 +17,22 @@ namespace FAQ.Controllers
     {
         private readonly IFaqRepository _faqRepository;
         private readonly IUserProvider _userProvider;
-        private readonly IFaqService _faqService;
+        private readonly IFaqTagService _faqTagService;
         private readonly INotyfService _notyf;
         private readonly ITagRepository _tagRepository;
-        private readonly IFAqManager _faqManager;
 
         public FaqController(IFaqRepository faqRepository,
             IUserProvider userProvider,
-            IFaqService faqService,
+            IFaqTagService faqTagService,
             INotyfService notyf,
-            ITagRepository tagRepository,
-            IFAqManager faqManager
+            ITagRepository tagRepository
         )
         {
             _faqRepository = faqRepository;
             _userProvider = userProvider;
-            _faqService = faqService;
+            _faqTagService = faqTagService;
             _notyf = notyf;
             _tagRepository = tagRepository;
-            _faqManager = faqManager;
         }
 
         [HttpGet]
@@ -59,11 +57,11 @@ namespace FAQ.Controllers
                     await LoadTagOptions(faqViewModel);
                     return View(faqViewModel);
                 }
-
                 var user = await _userProvider.GetCurrentUser();
-                var dto = new FaqDto(user, faqViewModel.Question, faqViewModel.Answer);
-                await _faqManager.CreateFaqAndRecordTags(faqViewModel.TagIds, dto);
-                _notyf.Success("Post Created");
+                var tags = await _tagRepository.GetQueryable().Where(x => faqViewModel.TagIds.Contains(x.Id)).ToListAsync();
+                var dto = new FaqDto(user, faqViewModel.Question, faqViewModel.Answer, tags);
+                await _faqTagService.Create(dto);
+                _notyf.Success("FAQ Created");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
@@ -109,9 +107,9 @@ namespace FAQ.Controllers
                 }
 
                 var user = await _userProvider.GetCurrentUser();
-                var updateDto = new FaqDto(user, viewModel.Question, viewModel.Answer);
-                await _faqService.Update(faq, updateDto);
-                _notyf.Warning("Post Updated");
+                var updateDto = new FaqUpdateDto(user, viewModel.Question, viewModel.Answer);
+                await _faqTagService.Update(faq, updateDto);
+                _notyf.Warning("FAQ Updated");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
@@ -128,8 +126,8 @@ namespace FAQ.Controllers
             try
             {
                 var faq = await _faqRepository.FindOrThrowAsync(id);
-                await _faqService.Remove(faq);
-                _notyf.Success("Post Removed");
+                await _faqTagService.Remove(faq);
+                _notyf.Success("FAQ Removed");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)

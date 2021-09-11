@@ -1,4 +1,4 @@
-﻿using FAQ.Infrastructure.Interface;
+﻿using FAQ.Infrastructure.Base.Interface;
 using Microsoft.AspNetCore.Identity;
 
 namespace FAQ.entities

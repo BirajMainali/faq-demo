@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using FAQ.Infrastructure.Interface.Base.BaseRepository.Interface;
+using FAQ.Infrastructure.Base.Interface.Base.BaseRepository.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace FAQ.Infrastructure
+namespace FAQ.Infrastructure.Base
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {

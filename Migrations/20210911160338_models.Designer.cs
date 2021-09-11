@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FAQ.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210910162546_faq")]
-    partial class faq
+    [Migration("20210911160338_models")]
+    partial class models
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,20 +21,20 @@ namespace FAQ.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("FAQ.Model.Faq", b =>
+            modelBuilder.Entity("FAQ.entities.Faq", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime?>("ChangeAt")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<string>("Answer")
                         .HasColumnType("text");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<DateTime?>("ChangeAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Question")
                         .HasColumnType("text");
 
                     b.Property<string>("RecAuditLog")
@@ -46,9 +46,6 @@ namespace FAQ.Migrations
                     b.Property<char>("RecStatus")
                         .HasColumnType("character(1)");
 
-                    b.Property<string>("Question")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
@@ -56,7 +53,91 @@ namespace FAQ.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FAQ", "FAQ");
+                    b.ToTable("faq_items", "faq");
+                });
+
+            modelBuilder.Entity("FAQ.entities.FaqTag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("ChangeAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("FaqId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RecAuditLog")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RecDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<char>("RecStatus")
+                        .HasColumnType("character(1)");
+
+                    b.Property<long?>("TagId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FaqId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("faq_tag", "faq");
+                });
+
+            modelBuilder.Entity("FAQ.entities.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("ChangeAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("RecAuditLog")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RecDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<char>("RecStatus")
+                        .HasColumnType("character(1)");
+
+                    b.Property<string>("Slug")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tags", "faq");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 178, DateTimeKind.Local).AddTicks(9437),
+                            RecStatus = 'A',
+                            Slug = "Stakeholder"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5602),
+                            RecStatus = 'A',
+                            Slug = "Inventory"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            RecDate = new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5614),
+                            RecStatus = 'A',
+                            Slug = "Lekhastra Web"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -257,20 +338,35 @@ namespace FAQ.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FAQ.Model.User", b =>
+            modelBuilder.Entity("FAQ.entities.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.ToTable("auth_user", "user");
+                    b.ToTable("auth_user", "User");
                 });
 
-            modelBuilder.Entity("FAQ.Model.Faq", b =>
+            modelBuilder.Entity("FAQ.entities.Faq", b =>
                 {
-                    b.HasOne("FAQ.Model.User", "User")
+                    b.HasOne("FAQ.entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FAQ.entities.FaqTag", b =>
+                {
+                    b.HasOne("FAQ.entities.Faq", "Faq")
+                        .WithMany("FaqTags")
+                        .HasForeignKey("FaqId");
+
+                    b.HasOne("FAQ.entities.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId");
+
+                    b.Navigation("Faq");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -324,13 +420,18 @@ namespace FAQ.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FAQ.Model.User", b =>
+            modelBuilder.Entity("FAQ.entities.User", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithOne()
-                        .HasForeignKey("FAQ.Model.User", "Id")
+                        .HasForeignKey("FAQ.entities.User", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FAQ.entities.Faq", b =>
+                {
+                    b.Navigation("FaqTags");
                 });
 #pragma warning restore 612, 618
         }

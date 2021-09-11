@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FAQ.Infrastructure;
-using FAQ.Infrastructure.Interface;
+using FAQ.Infrastructure.Base;
+using FAQ.Infrastructure.Base.Interface;
 
 namespace FAQ.entities
 {
@@ -9,7 +10,8 @@ namespace FAQ.entities
         public virtual User User { get; protected set; }
         public string Question { get; protected set; }
         public string Answer { get; protected set; }
-        
+        public List<FaqTag> FaqTags { get; set; }
+
         protected Faq()
         {
         }

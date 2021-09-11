@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FAQ.Models;
@@ -12,14 +9,17 @@ namespace FAQ.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly INotyfService _notyfService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, INotyfService notyfService)
         {
             _logger = logger;
+            _notyfService = notyfService;
         }
 
         public IActionResult Index()
         {
+            _notyfService.Success("Welcome to FAQ");
             return View();
         }
 

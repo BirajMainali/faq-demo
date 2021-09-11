@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using FAQ.entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -6,8 +8,12 @@ namespace FAQ.ViewModel
 {
     public class FaqViewModel
     {
+        [Required]
         public string Question { get; set; }
+        [Required]
         public string Answer { get; set; }
+        [Required]
+        [DisplayName("Tags")]
         public long[] TagIds { get; set; }
 
         public List<Tag> Tags { get; set; } = new List<Tag>();

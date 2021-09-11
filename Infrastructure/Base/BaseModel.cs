@@ -1,7 +1,7 @@
 ﻿using System;
 using FAQ.Infrastructure.Constants;
 
-namespace FAQ.Infrastructure
+namespace FAQ.Infrastructure.Base
 {
     public class BaseModel
     {

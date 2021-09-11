@@ -28,7 +28,6 @@ namespace FAQ.Infrastructure.Provider
         {
             var userId = GetCurrentUserId();
             if (userId.HasValue) return await _userRepository.FindOrThrowAsync(userId.Value);
-
             return null;
         }
 

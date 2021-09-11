@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace FAQ.Infrastructure.Interface
+namespace FAQ.Infrastructure.Base.Interface
 {
     namespace Base.BaseRepository.Interface
     {

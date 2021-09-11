@@ -1,4 +1,4 @@
-﻿namespace FAQ.Infrastructure.Interface
+﻿namespace FAQ.Infrastructure.Base.Interface
 {
     public interface ISoftDelete
     {
