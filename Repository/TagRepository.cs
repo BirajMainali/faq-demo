@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FAQ.Repository
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class TagRepository : BaseRepository<Tag>, ITagRepository
     {
-        public UserRepository(DbContext context) : base(context)
+        public TagRepository(DbContext context) : base(context)
         {
         }
     }

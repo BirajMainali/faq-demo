@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FAQ.Dto;
+using FAQ.entities;
 using FAQ.Infrastructure.Helper;
-using FAQ.Model;
 using FAQ.Repository.Interface;
 using FAQ.Services.Interface;
 
@@ -16,19 +16,20 @@ namespace FAQ.Services
             _faqRepository = faqRepository;
         }
 
-        public async Task Create(FaqDto dto)
+        public async Task<Faq> Create(FaqDto dto)
         {
             using var tsc = TransactionScopeHelper.Scope();
-            var faq = new Faq(dto.User, dto.Title, dto.Description, dto.ImagePath);
+            var faq = new Faq(dto.User, dto.Question, dto.Answer);
             await _faqRepository.CreateAsync(faq);
             await _faqRepository.FlushAsync();
             tsc.Complete();
+            return faq;
         }
 
         public async Task Update(Faq faq, FaqDto dto)
         {
             using var tsc = TransactionScopeHelper.Scope();
-            faq.Update(dto.User, dto.Title, dto.Description, dto.ImagePath);
+            faq.Update(dto.User, dto.Question, dto.Answer);
             _faqRepository.Update(faq);
             await _faqRepository.FlushAsync();
             tsc.Complete();

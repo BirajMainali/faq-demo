@@ -1,5 +1,5 @@
-﻿using FAQ.Infrastructure;
-using FAQ.Model;
+﻿using FAQ.entities;
+using FAQ.Infrastructure;
 using FAQ.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 

@@ -31,7 +31,7 @@ namespace FAQ.Migrations
                     b.Property<DateTime?>("ChangeAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Answer")
                         .HasColumnType("text");
 
                     b.Property<string>("ImagePath")
@@ -46,7 +46,7 @@ namespace FAQ.Migrations
                     b.Property<char>("RecStatus")
                         .HasColumnType("character(1)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Question")
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")

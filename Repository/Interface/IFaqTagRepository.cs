@@ -3,7 +3,7 @@ using FAQ.Infrastructure.Interface.Base.BaseRepository.Interface;
 
 namespace FAQ.Repository.Interface
 {
-    public interface IFaqRepository : IBaseRepository<Faq>
+    public interface IFaqTagRepository : IBaseRepository<FaqTag>
     {
     }
 }

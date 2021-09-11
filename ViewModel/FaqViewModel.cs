@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using FAQ.entities;
 
 namespace FAQ.ViewModel
 {
     public class FaqViewModel
     {
-        public IFormFile File { get; set; }
-        public string Title { get; set; }
-        public string Description { get;set; }
+        public string Question { get; set; }
+        public List<long> Tags { get; set; }
+        public string Answer { get; set; }
     }
 }

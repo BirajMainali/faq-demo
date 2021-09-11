@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using FAQ.Model;
+using FAQ.entities;
 
 namespace FAQ.Infrastructure.Provider.Interface
 {

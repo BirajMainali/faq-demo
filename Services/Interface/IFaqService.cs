@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using FAQ.Dto;
-using FAQ.Model;
+using FAQ.entities;
 
 namespace FAQ.Services.Interface
 {
     public interface IFaqService
     {
-        Task Create(FaqDto dto);
+        Task<Faq> Create(FaqDto dto);
         Task Update(Faq faq, FaqDto dto);
         Task Remove(Faq faq);
     }

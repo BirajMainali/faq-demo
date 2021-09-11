@@ -1,6 +1,6 @@
-﻿using FAQ.Model;
+﻿using FAQ.entities;
 
 namespace FAQ.Dto
 {
-    public record FaqDto(User User, string Title, string Description, string ImagePath);
+    public record FaqDto(User User, string Question, string Answer);
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FAQ.entities;
 using FAQ.Infrastructure.Provider.Interface;
-using FAQ.Model;
 using FAQ.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 
