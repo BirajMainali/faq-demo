@@ -8,7 +8,7 @@ namespace FAQ
     {
         public static ModelBuilder AddFaq(this ModelBuilder builder)
         {
-            builder.Entity<User>().ToTable("auth_user", Schema.User);
+        //  builder.Entity<User>().ToTable("auth_user", Schema.User);
             builder.Entity<Faq>().ToTable("faq_items", Schema.Faq);
             builder.Entity<Tag>().ToTable("tags", schema: Schema.Faq);
             builder.Entity<FaqTag>().ToTable("faq_tag", schema: Schema.Faq);

@@ -45,7 +45,7 @@ namespace FAQ
                 app.UseHsts();
             }
 
-            context.Database.MigrateAsync();
+            context.Database.Migrate();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseNotyf();
