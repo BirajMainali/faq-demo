@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using FAQ.Application;
 using FAQ.Dto;
 using FAQ.entities;
 using FAQ.Infrastructure.Provider.Interface;
@@ -19,23 +20,23 @@ namespace FAQ.Controllers
         private readonly IUserProvider _userProvider;
         private readonly IFaqService _faqService;
         private readonly INotyfService _notyf;
-        private readonly IFaqTagService _faqTagService;
         private readonly ITagRepository _tagRepository;
+        private readonly IFAqManager _fAqManager;
 
         public FaqController(IFaqRepository faqRepository,
             IUserProvider userProvider,
             IFaqService faqService,
             INotyfService notyf,
-            IFaqTagService faqTagService,
-            ITagRepository tagRepository
+            ITagRepository tagRepository,
+            IFAqManager fAqManager
         )
         {
             _faqRepository = faqRepository;
             _userProvider = userProvider;
             _faqService = faqService;
             _notyf = notyf;
-            _faqTagService = faqTagService;
             _tagRepository = tagRepository;
+            _fAqManager = fAqManager;
         }
 
         [HttpGet]
@@ -57,8 +58,7 @@ namespace FAQ.Controllers
                 if (!ModelState.IsValid) return View(faqViewModel);
                 var user = await _userProvider.GetCurrentUser();
                 var dto = new FaqDto(user, faqViewModel.Question, faqViewModel.Answer);
-                var faq = await _faqService.Create(dto);
-                await RecordTag(faqViewModel.Tags, faq);
+                await _fAqManager.CreateFaqAndRecordTags(faqViewModel.TagIds, dto);
                 _notyf.Success("Post Created");
                 return RedirectToAction(nameof(Index));
             }
@@ -129,21 +129,7 @@ namespace FAQ.Controllers
             }
         }
 
-        private async Task RecordTag(IEnumerable<long> tagIds, Faq faq)
-        {
-            var tags = new List<Tag>();
-            foreach (var tagId in tagIds)
-            {
-                var tag = await _tagRepository.FindOrThrowAsync(tagId);
-                tags.Add(tag);
-            }
-
-            var faqTagDto = new FaqTagDto()
-            {
-                Tags = tags,
-                Faq = faq
-            };
-            await _faqTagService.Create(faqTagDto);
-        }
+        private async Task LoadTagOptions(FaqViewModel viewModel)
+            => viewModel.Tags = await _tagRepository.GetAllAsync();
     }
 }
