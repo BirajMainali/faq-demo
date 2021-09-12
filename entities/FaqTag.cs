@@ -1,5 +1,4 @@
-﻿using FAQ.Infrastructure;
-using FAQ.Infrastructure.Base;
+﻿using FAQ.Infrastructure.Base;
 using FAQ.Infrastructure.Base.Interface;
 
 namespace FAQ.entities

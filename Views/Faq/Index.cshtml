@@ -1,6 +1,6 @@
 ﻿@using FAQ.Repository.Interface
 @using FAQ.Infrastructure.Provider.Interface
-@model List<FAQ.entities.Faq>
+@model FAQ.ViewModel.FaqListModel
 @inject IFaqTagRepository _faqTagRepository
 @inject IUserProvider _userProvider
 @{
@@ -9,64 +9,23 @@
 }
 <form class="mb-4">
     <div class="form-group mb-1">
-        <input class="form-control p-3 search" type="text" name="search" placeholder="Ask Me ?"/>
+        <input class="form-control p-3 search" type="text" asp-for="Search" placeholder="Ask Me ?"/>
     </div>
     <button hidden="" type="submit"></button>
 </form>
 
 @{
-    if (!Model.Any())
+    if (!Model.Faqs.Any())
     {
-        <h4 class="text-center info p-0"> <i class="fa fa-search"></i> Please Enter Your Quries </h4>
-    }
-    @foreach (var faq in Model)
-    {
-        <details class="card mb-1">
-            <summary class="card-header">
-                <span class="question">@faq.Question</span>
-                <span style="float: right">
-                    @{
-                        var tags = _faqTagRepository.GetQueryable().Where(x => x.Faq == faq).Select(x => x.Tag.Slug);
-                        foreach (var tag in tags)
-                        {
-                            <code class="ml-1">#@tag&nbsp;</code>
-                        }
-                    }
-                    @{
-                        if (_userProvider.GetCurrentUserId() != null)
-                        {
-                            <a asp-controller="Faq" asp-action="Edit" asp-route-id="@faq.Id">
-                                <button class="btn btn-info btn-sm">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
-                            </a>
-                            <a asp-controller="Faq" asp-action="Remove" asp-route-id="@faq.Id">
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </a>
-                        }
-                    }
-                </span>
-            </summary>
-            @foreach (var answer in faq.Answer.Split(">>"))
-            {
-                <div class="card-body">
-                    <p class="mb-0 p-0">@answer</p>
-                </div>
-            }
-        </details>
+        if (!string.IsNullOrEmpty(Model.Search))
+        {
+            <h4 class="text-center info p-0"> <i class="fa fa-search"></i> "@Model.Search" no mathcing result </h4>
+        }
+        else
+        {
+            <h4 class="text-center info p-0"> <i class="fa fa-search"></i> Please Enter Your Quries </h4>
+        }
     }
 }
-<style>
-    .card{
-     transition: all .3s;
-    }
-        .question{
-        font-weight: 400;
-        font-size: 18px;
-        }
-        .form-control{
-        outline: none;
-        }
-</style>
+<partial name="_FaqIndex" model="@Model.Faqs"/>
+

@@ -15,6 +15,8 @@ namespace FAQ.ViewModel
         [Required]
         [DisplayName("Tags")]
         public long[] TagIds { get; set; }
+
+        public List<Faq> Faqs;
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
         public SelectList TagOptions()

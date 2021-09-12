@@ -5,31 +5,45 @@
     Layout = "_Layout";
 }
 
-<div class="card">
-    <div class="card-header">
-        <div class="card-title">Add FAQ</div>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Add FAQ</div>
+            </div>
+            <form asp-action="New" asp-controller="Faq" method="post">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="Question"></label>
+                        <input class="form-control" asp-for="Question"/>
+                        <span asp-validation-for="Question" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Answer"></label>
+                        <textarea class="form-control" asp-for="Answer" rows="4"></textarea>
+                        <span asp-validation-for="Answer" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TagIds"></label>
+                        <select class="form-select multiple-select" asp-for="TagIds" asp-items="Model.TagOptions()">
+                        </select>
+                        <span asp-validation-for="TagIds" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info" type="submit"><i class="fas fa-share"></i> Share</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <form asp-action="New" asp-controller="Faq" method="post">
-        <div class="card-body">
-            <div class="form-group">
-                <label asp-for="Question"></label>
-                <input class="form-control" asp-for="Question"/>
-                <span asp-validation-for="Question" class="text-danger"></span>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Recent Faq</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Answer"></label>
-                <textarea class="form-control" asp-for="Answer" rows="4"></textarea>
-                <span asp-validation-for="Answer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TagIds"></label>
-                <select class="form-select multiple-select" asp-for="TagIds" asp-items="Model.TagOptions()">
-                </select>
-                <span asp-validation-for="TagIds" class="text-danger"></span>
+            <div class="card-body">
+                <partial name="_FaqIndex" model="@Model.Faqs"/>
             </div>
         </div>
-        <div class="card-footer">
-            <button class="btn btn-info" type="submit"><i class="fas fa-share"></i> Share</button>
-        </div>
-    </form>
+    </div>
 </div>

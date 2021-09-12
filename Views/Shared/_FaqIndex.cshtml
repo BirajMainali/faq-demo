@@ -1,0 +1,65 @@
+﻿@using FAQ.Repository.Interface
+@using FAQ.Infrastructure.Provider.Interface
+@model List<FAQ.entities.Faq>
+@inject IFaqTagRepository _faqTagRepository
+@inject IUserProvider _userProvider
+@{
+    @foreach (var faq in Model)
+    {
+        <details class="card mb-1">
+            <summary class="card-header">
+                <span class="question">@faq.Question</span>
+                <span style="float: right">
+                    @{
+                        var tags = _faqTagRepository.GetQueryable().Where(x => x.Faq == faq).Select(x => x.Tag.Slug);
+                        foreach (var tag in tags)
+                        {
+                            <span class="badge  bg-info text-white">#@tag</span>
+                        }
+                    }
+                    @{
+                        if (_userProvider.GetCurrentUserId() != null)
+                        {
+                            <a asp-controller="Faq" asp-action="Edit" asp-route-id="@faq.Id">
+                                <button class="btn btn-info btn-sm ask-for-action">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                            </a>
+                            <a asp-controller="Faq" asp-action="Remove" asp-route-id="@faq.Id">
+                                <button class="btn btn-danger btn-sm ask-for-action">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </a>
+                        }
+                    }
+                </span>
+            </summary>
+            @foreach (var answer in faq.Answer.Split(">>"))
+            {
+                <div class="card-body">
+                    <p class="mb-0 p-0">@answer</p>
+                </div>
+            }
+        </details>
+    }
+}
+<style>
+    .card{
+     transition: all .3s;
+    }
+    .question{
+    font-weight: 400;
+    font-size: 18px;
+    }
+</style>
+
+@section Scripts
+{
+    <script>
+  const ask = document.querySelector('.ask-for-action');
+  ask.addEventListener('click', (e) => {
+    const sure = confirm("Are you sure ?");
+    if (!sure) e.preventDefault();
+  });
+    </script>
+}

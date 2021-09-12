@@ -22,12 +22,14 @@ namespace FAQ.Controllers
         private readonly IFaqTagService _faqTagService;
         private readonly INotyfService _notyf;
         private readonly ITagRepository _tagRepository;
+        private readonly IFaqTagRepository _faqTagRepository;
 
         public FaqController(IFaqRepository faqRepository,
             IUserProvider userProvider,
             IFaqTagService faqTagService,
             INotyfService notyf,
-            ITagRepository tagRepository
+            ITagRepository tagRepository,
+            IFaqTagRepository faqTagRepository
         )
         {
             _faqRepository = faqRepository;
@@ -35,18 +37,25 @@ namespace FAQ.Controllers
             _faqTagService = faqTagService;
             _notyf = notyf;
             _tagRepository = tagRepository;
+            _faqTagRepository = faqTagRepository;
         }
 
         [HttpGet]
-        public IActionResult Index(string search)
+        public async Task<IActionResult> Index(string search)
         {
-            var faqs = new List<Faq>();
+            var listViewModel = new FaqListModel
+            {
+                Search = search,
+                Tags = await _faqTagRepository.GetAllAsync()
+            };
             if (!string.IsNullOrWhiteSpace(search))
             {
-                faqs = new List<Faq>(_faqRepository.GetQueryable()
-                    .Where(x => x.Answer.Contains(search) || x.Question.Contains(search)));
+                listViewModel.Faqs = new List<Faq>(_faqRepository.GetQueryable()
+                    .Where(x => x.Answer.ToLower().Contains(search.ToLower()) ||
+                                x.Question.ToLower().Contains(search.ToLower())));
             }
-            return View(faqs);
+
+            return View(listViewModel);
         }
 
         [HttpGet]
@@ -147,6 +156,9 @@ namespace FAQ.Controllers
         }
 
         private async Task LoadTagOptions(FaqViewModel viewModel)
-            => viewModel.Tags = await _tagRepository.GetAllAsync();
+        {
+            viewModel.Tags = await _tagRepository.GetAllAsync();
+            viewModel.Faqs = await _faqRepository.GetAllAsync();
+        }
     }
 }

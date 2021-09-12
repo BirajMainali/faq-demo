@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using FAQ.Infrastructure.Base;
 using FAQ.Infrastructure.Base.Interface;
 
 namespace FAQ.entities
 {
-    public class Faq : BaseModel, ISoftDelete
+    public class Faq : BaseModel, ISoftDelete, IEnumerable
     {
         public virtual User User { get; protected set; }
         public string Question { get; protected set; }
@@ -26,6 +27,11 @@ namespace FAQ.entities
             User = user;
             Question = question;
             Answer = answer;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
