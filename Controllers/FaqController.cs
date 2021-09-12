@@ -36,8 +36,11 @@ namespace FAQ.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() =>
-            View(await _faqRepository.GetAllAsync());
+        public async Task<IActionResult> Index()
+        {
+            var faqs = await _faqRepository.GetAllAsync();
+            return View(faqs);
+        }
 
         [HttpGet]
         public async Task<IActionResult> New()
@@ -48,18 +51,18 @@ namespace FAQ.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(FaqViewModel faqViewModel)
+        public async Task<IActionResult> New(FaqViewModel faqVm)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    await LoadTagOptions(faqViewModel);
-                    return View(faqViewModel);
+                    await LoadTagOptions(faqVm);
+                    return View(faqVm);
                 }
-                var user = await _userProvider.GetCurrentUser();
-                var tags = await _tagRepository.GetQueryable().Where(x => faqViewModel.TagIds.Contains(x.Id)).ToListAsync();
-                var dto = new FaqDto(user, faqViewModel.Question, faqViewModel.Answer, tags);
+
+                var tags = await _tagRepository.GetQueryable().Where(x => faqVm.TagIds.Contains(x.Id)).ToListAsync();
+                var dto = new FaqDto(faqVm.User, faqVm.Question, faqVm.Answer, tags);
                 await _faqTagService.Create(dto);
                 _notyf.Success("FAQ Created");
                 return RedirectToAction(nameof(Index));
@@ -106,8 +109,7 @@ namespace FAQ.Controllers
                     return View(viewModel);
                 }
 
-                var user = await _userProvider.GetCurrentUser();
-                var updateDto = new FaqUpdateDto(user, viewModel.Question, viewModel.Answer);
+                var updateDto = new FaqUpdateDto(viewModel.User, viewModel.Question, viewModel.Answer);
                 await _faqTagService.Update(faq, updateDto);
                 _notyf.Warning("FAQ Updated");
                 return RedirectToAction(nameof(Index));
@@ -138,6 +140,9 @@ namespace FAQ.Controllers
         }
 
         private async Task LoadTagOptions(FaqViewModel viewModel)
-            => viewModel.Tags = await _tagRepository.GetAllAsync();
+        {
+            viewModel.Tags = await _tagRepository.GetAllAsync();
+            viewModel.User = await _userProvider.GetCurrentUser();
+        }
     }
 }

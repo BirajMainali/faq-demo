@@ -9,9 +9,6 @@ namespace FAQ.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "User");
-
-            migrationBuilder.EnsureSchema(
                 name: "faq");
 
             migrationBuilder.CreateTable(
@@ -178,24 +175,6 @@ namespace FAQ.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "auth_user",
-                schema: "User",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_auth_user", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_auth_user_AspNetUsers_Id",
-                        column: x => x.Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "faq_items",
                 schema: "faq",
                 columns: table => new
@@ -214,10 +193,9 @@ namespace FAQ.Migrations
                 {
                     table.PrimaryKey("PK_faq_items", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_faq_items_auth_user_UserId",
+                        name: "FK_faq_items_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "User",
-                        principalTable: "auth_user",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -261,9 +239,9 @@ namespace FAQ.Migrations
                 columns: new[] { "Id", "ChangeAt", "RecAuditLog", "RecDate", "RecStatus", "Slug" },
                 values: new object[,]
                 {
-                    { 1L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 178, DateTimeKind.Local).AddTicks(9437), 'A', "Stakeholder" },
-                    { 2L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5602), 'A', "Inventory" },
-                    { 3L, null, null, new DateTime(2021, 9, 11, 21, 48, 38, 179, DateTimeKind.Local).AddTicks(5614), 'A', "Lekhastra Web" }
+                    { 1L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(624), 'A', "Stakeholder" },
+                    { 2L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7613), 'A', "Inventory" },
+                    { 3L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7625), 'A', "Lekhastra Web" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -353,10 +331,6 @@ namespace FAQ.Migrations
             migrationBuilder.DropTable(
                 name: "tags",
                 schema: "faq");
-
-            migrationBuilder.DropTable(
-                name: "auth_user",
-                schema: "User");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

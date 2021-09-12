@@ -30,7 +30,7 @@ namespace FAQ.Services
             await _faqRepository.CreateAsync(faq);
             await _faqRepository.FlushAsync();
             tsc.Complete();
-        }
+        }   
 
         public async Task Update(Faq faq, FaqUpdateDto dto)
         {

@@ -5,6 +5,7 @@ using FAQ.entities;
 using FAQ.Infrastructure.Provider.Interface;
 using FAQ.Repository.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace FAQ.Infrastructure.Provider
 {
@@ -24,7 +25,7 @@ namespace FAQ.Infrastructure.Provider
             return GetCurrentUserId() != null;
         }
 
-        public async Task<User> GetCurrentUser()
+        public async Task<IdentityUser> GetCurrentUser()
         {
             var userId = GetCurrentUserId();
             if (userId.HasValue) return await _userRepository.FindOrThrowAsync(userId.Value);
