@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FAQ.entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FAQ.ViewModel
@@ -16,9 +15,6 @@ namespace FAQ.ViewModel
         [Required]
         [DisplayName("Tags")]
         public long[] TagIds { get; set; }
-
-        public IdentityUser User { get; set; }
-
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
         public SelectList TagOptions()

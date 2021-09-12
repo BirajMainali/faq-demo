@@ -19,7 +19,6 @@ namespace FAQ.Controllers
 
         public IActionResult Index()
         {
-            _notyfService.Success("Welcome to FAQ");
             return View();
         }
 

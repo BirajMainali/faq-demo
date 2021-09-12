@@ -3,15 +3,17 @@ using System;
 using FAQ.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FAQ.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210912072711_models")]
+    partial class models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,21 +120,21 @@ namespace FAQ.Migrations
                         new
                         {
                             Id = 1L,
-                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 535, DateTimeKind.Local).AddTicks(9269),
+                            RecDate = new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(1393),
                             RecStatus = 'A',
                             Slug = "Stakeholder"
                         },
                         new
                         {
                             Id = 2L,
-                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 536, DateTimeKind.Local).AddTicks(5354),
+                            RecDate = new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(7692),
                             RecStatus = 'A',
                             Slug = "Inventory"
                         },
                         new
                         {
                             Id = 3L,
-                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 536, DateTimeKind.Local).AddTicks(5366),
+                            RecDate = new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(7704),
                             RecStatus = 'A',
                             Slug = "Lekhastra Web"
                         });

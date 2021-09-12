@@ -26,7 +26,6 @@ namespace FAQ.Services
             {
                 faq.FaqTags.Add(new FaqTag { Faq = faq, Tag = tag });
             }
-
             await _faqRepository.CreateAsync(faq);
             await _faqRepository.FlushAsync();
             tsc.Complete();

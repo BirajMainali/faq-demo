@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FAQ.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210912062408_models")]
-    partial class models
+    [Migration("20210912094548_stuff")]
+    partial class stuff
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,21 +120,21 @@ namespace FAQ.Migrations
                         new
                         {
                             Id = 1L,
-                            RecDate = new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(624),
+                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 535, DateTimeKind.Local).AddTicks(9269),
                             RecStatus = 'A',
                             Slug = "Stakeholder"
                         },
                         new
                         {
                             Id = 2L,
-                            RecDate = new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7613),
+                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 536, DateTimeKind.Local).AddTicks(5354),
                             RecStatus = 'A',
                             Slug = "Inventory"
                         },
                         new
                         {
                             Id = 3L,
-                            RecDate = new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7625),
+                            RecDate = new DateTime(2021, 9, 12, 15, 30, 48, 536, DateTimeKind.Local).AddTicks(5366),
                             RecStatus = 'A',
                             Slug = "Lekhastra Web"
                         });
@@ -202,6 +202,10 @@ namespace FAQ.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -252,6 +256,8 @@ namespace FAQ.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -338,9 +344,16 @@ namespace FAQ.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("FAQ.entities.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
             modelBuilder.Entity("FAQ.entities.Faq", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("FAQ.entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 

@@ -30,6 +30,7 @@ namespace FAQ.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -239,9 +240,9 @@ namespace FAQ.Migrations
                 columns: new[] { "Id", "ChangeAt", "RecAuditLog", "RecDate", "RecStatus", "Slug" },
                 values: new object[,]
                 {
-                    { 1L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(624), 'A', "Stakeholder" },
-                    { 2L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7613), 'A', "Inventory" },
-                    { 3L, null, null, new DateTime(2021, 9, 12, 12, 9, 7, 870, DateTimeKind.Local).AddTicks(7625), 'A', "Lekhastra Web" }
+                    { 1L, null, null, new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(1393), 'A', "Stakeholder" },
+                    { 2L, null, null, new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(7692), 'A', "Inventory" },
+                    { 3L, null, null, new DateTime(2021, 9, 12, 13, 12, 11, 576, DateTimeKind.Local).AddTicks(7704), 'A', "Lekhastra Web" }
                 });
 
             migrationBuilder.CreateIndex(

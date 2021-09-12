@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using FAQ.Dto;
+using FAQ.entities;
 using FAQ.Infrastructure.Provider.Interface;
 using FAQ.Repository.Interface;
 using FAQ.Services.Interface;
@@ -36,13 +38,19 @@ namespace FAQ.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string search)
         {
-            var faqs = await _faqRepository.GetAllAsync();
+            var faqs = new List<Faq>();
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                faqs = new List<Faq>(_faqRepository.GetQueryable()
+                    .Where(x => x.Answer.Contains(search) || x.Question.Contains(search)));
+            }
             return View(faqs);
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> New()
         {
             var viewModel = new FaqViewModel();
@@ -62,7 +70,8 @@ namespace FAQ.Controllers
                 }
 
                 var tags = await _tagRepository.GetQueryable().Where(x => faqVm.TagIds.Contains(x.Id)).ToListAsync();
-                var dto = new FaqDto(faqVm.User, faqVm.Question, faqVm.Answer, tags);
+                var user = await _userProvider.GetCurrentUser();
+                var dto = new FaqDto(user, faqVm.Question, faqVm.Answer, tags);
                 await _faqTagService.Create(dto);
                 _notyf.Success("FAQ Created");
                 return RedirectToAction(nameof(Index));
@@ -81,12 +90,11 @@ namespace FAQ.Controllers
             try
             {
                 var faq = await _faqRepository.FindOrThrowAsync(id);
-                var vm = new FaqViewModel()
+                var vm = new FaqUpdateViewModel()
                 {
                     Question = faq.Question,
                     Answer = faq.Answer,
                 };
-                await LoadTagOptions(vm);
                 return View(vm);
             }
             catch (Exception e)
@@ -97,19 +105,18 @@ namespace FAQ.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Edit(long id, FaqViewModel viewModel)
+        public async Task<IActionResult> Edit(long id, FaqUpdateViewModel vm)
         {
             try
             {
                 var faq = await _faqRepository.FindOrThrowAsync(id);
                 if (!ModelState.IsValid)
                 {
-                    await LoadTagOptions(viewModel);
-                    return View(viewModel);
+                    return View(vm);
                 }
 
-                var updateDto = new FaqUpdateDto(viewModel.User, viewModel.Question, viewModel.Answer);
+                var user = await _userProvider.GetCurrentUser();
+                var updateDto = new FaqUpdateDto(user, vm.Question, vm.Answer);
                 await _faqTagService.Update(faq, updateDto);
                 _notyf.Warning("FAQ Updated");
                 return RedirectToAction(nameof(Index));
@@ -140,9 +147,6 @@ namespace FAQ.Controllers
         }
 
         private async Task LoadTagOptions(FaqViewModel viewModel)
-        {
-            viewModel.Tags = await _tagRepository.GetAllAsync();
-            viewModel.User = await _userProvider.GetCurrentUser();
-        }
+            => viewModel.Tags = await _tagRepository.GetAllAsync();
     }
 }
