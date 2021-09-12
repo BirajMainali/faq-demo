@@ -34,22 +34,23 @@
                     }
                 </span>
             </summary>
-            @foreach (var answer in faq.Answer.Split(">>"))
-            {
-                <div class="card-body">
-                    <p class="mb-0 p-0">@answer</p>
-                </div>
-            }
+            <div class="indent--text">
+                @foreach (var answer in faq.Answer.Split(">>"))
+                {
+                     <p class="ml-3">&bull; @answer</p>
+                }
+            </div>
         </details>
     }
 }
 <style>
-    .card{
-     transition: all .3s;
-    }
     .question{
     font-weight: 400;
     font-size: 18px;
+    }
+    .indent--text{
+      padding: 15px;
+      margin-left: 30px;
     }
 </style>
 
