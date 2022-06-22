@@ -1,2 +1,2 @@
 # FAQ
-Product FAQ
+Product FAQ APP
